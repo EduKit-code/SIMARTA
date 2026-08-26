@@ -171,6 +171,31 @@
 </head>
 <body class="flex h-screen overflow-hidden relative">
 
+    <!-- LAYAR LOGIN — ditampilkan sebelum sesi valid ada. Disembunyikan setelah login berhasil. -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-100 to-blue-50 dark:from-slate-950 dark:to-slate-900 p-4">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-5">
+                <div class="w-11 h-11 mx-auto rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/20">S</div>
+                <h1 class="text-base font-bold mt-2.5 text-slate-900 dark:text-slate-50">SIMARTA</h1>
+                <p class="text-[11px] opacity-60 text-slate-700 dark:text-slate-300">Masuk sesuai peran: Operator, Kepala TU, atau Kepala Sekolah</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 p-5 space-y-3">
+                <div id="login-error" class="hidden text-[11px] font-medium text-red-600 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"></div>
+                <div>
+                    <label class="block text-[11px] font-medium opacity-70 mb-1 text-slate-700 dark:text-slate-300">Username</label>
+                    <input type="text" id="login-username" autocomplete="username" placeholder="mis. operator" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeydown="if(event.key==='Enter') doLogin();">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium opacity-70 mb-1 text-slate-700 dark:text-slate-300">Password</label>
+                    <input type="password" id="login-password" autocomplete="current-password" placeholder="••••••••" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500" onkeydown="if(event.key==='Enter') doLogin();">
+                </div>
+                <button id="login-submit-btn" onclick="doLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-shell" class="hidden contents">
+
     <!-- BACKDROP MOBILE OVERLAY -->
     <div id="sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-20 md:hidden hidden transition-opacity duration-200"></div>
 
@@ -208,15 +233,15 @@
                 </a>
 
                 <div class="pt-2.5 pb-1 px-2.5 text-[10px] font-bold opacity-40 uppercase tracking-wider">Persuratan & Tata Arsip</div>
-                <a href="#" onclick="switchTab('surat-masuk')" id="nav-surat-masuk" class="flex items-center px-2.5 py-1.5 text-xs rounded-lg transition opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 min-h-[36px]">
+                <a href="#" onclick="switchTab('surat-masuk')" id="nav-surat-masuk" data-role-visible="operator,kepala_tu,kepala_sekolah" class="flex items-center px-2.5 py-1.5 text-xs rounded-lg transition opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 min-h-[36px]">
                     <svg class="w-4 h-4 mr-2.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
                     Surat Masuk & Disposisi
                 </a>
-                <a href="#" onclick="switchTab('surat-keluar')" id="nav-surat-keluar" class="flex items-center px-2.5 py-1.5 text-xs rounded-lg transition opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 min-h-[36px]">
+                <a href="#" onclick="switchTab('surat-keluar')" id="nav-surat-keluar" data-role-visible="operator,kepala_tu,kepala_sekolah" class="flex items-center px-2.5 py-1.5 text-xs rounded-lg transition opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 min-h-[36px]">
                     <svg class="w-4 h-4 mr-2.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                     Surat Keluar
                 </a>
-                <a href="#" onclick="switchTab('arsip')" id="nav-arsip" class="flex items-center px-2.5 py-1.5 text-xs rounded-lg transition opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 min-h-[36px]">
+                <a href="#" onclick="switchTab('arsip')" id="nav-arsip" data-role-visible="operator,kepala_tu,kepala_sekolah" class="flex items-center px-2.5 py-1.5 text-xs rounded-lg transition opacity-70 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 min-h-[36px]">
                     <svg class="w-4 h-4 mr-2.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v1a2 2 0 01-2 2M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
                     Tata Arsip Persuratan
                 </a>
@@ -240,11 +265,14 @@
         </div>
 
         <div class="p-3 border-t border-gray-500/10 flex items-center space-x-2.5 bg-black/5 dark:bg-white/5">
-            <div class="w-7 h-7 rounded-full bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-[11px] flex-shrink-0 border border-blue-500/20">TU</div>
+            <div id="sidebar-user-avatar" class="w-7 h-7 rounded-full bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-[11px] flex-shrink-0 border border-blue-500/20">?</div>
             <div class="flex-1 min-w-0">
-                <p class="text-xs font-semibold truncate">Kepala TU / Admin</p>
-                <p class="text-[10px] opacity-50 truncate">Tata Usaha & Persuratan</p>
+                <p id="sidebar-user-name" class="text-xs font-semibold truncate">-</p>
+                <p id="sidebar-user-role" class="text-[10px] opacity-50 truncate">-</p>
             </div>
+            <button onclick="doLogout(false)" title="Keluar" aria-label="Keluar" class="opacity-50 hover:opacity-100 p-1.5 rounded-lg flex-shrink-0 hover:bg-black/5 dark:hover:bg-white/10">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            </button>
         </div>
     </aside>
 
@@ -273,30 +301,30 @@
             <div id="tab-dashboard" class="space-y-5">
                 <!-- STATS GRID -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-                    <div class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
+                    <div data-role-visible="operator,kepala_tu,kepala_sekolah" class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] sm:text-xs font-medium opacity-60">Surat Masuk (Bulan Ini)</p>
                             <span class="p-1 rounded-md bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs">📬</span>
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mt-1.5">42</h3>
-                        <p class="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-1 flex items-center">
-                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> 5 Perlu Disposisi
+                        <h3 id="dash-stat-sm-bulan" class="text-xl sm:text-2xl font-bold mt-1.5">0</h3>
+                        <p id="dash-stat-sm-disposisi" class="text-[10px] sm:text-[11px] text-amber-600 dark:text-amber-400 font-medium mt-1 flex items-center">
+                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> 0 Perlu Disposisi
                         </p>
                     </div>
-                    <div class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
+                    <div data-role-visible="operator,kepala_tu,kepala_sekolah" class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] sm:text-xs font-medium opacity-60">Surat Keluar Diterbitkan</p>
                             <span class="p-1 rounded-md bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs">📤</span>
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mt-1.5">128</h3>
-                        <p class="text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-1">124 Terverifikasi & Diarsipkan</p>
+                        <h3 id="dash-stat-sk-total" class="text-xl sm:text-2xl font-bold mt-1.5">0</h3>
+                        <p id="dash-stat-sk-terbit" class="text-[10px] sm:text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-1">0 Terverifikasi & Diarsipkan</p>
                     </div>
-                    <div class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
+                    <div data-role-visible="operator,kepala_tu,kepala_sekolah" class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
                         <div class="flex justify-between items-start">
                             <p class="text-[11px] sm:text-xs font-medium opacity-60">Total Arsip Terintegrasi</p>
                             <span class="p-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs">📁</span>
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mt-1.5">1,840</h3>
+                        <h3 id="dash-stat-arsip-total" class="text-xl sm:text-2xl font-bold mt-1.5">0</h3>
                         <p class="text-[10px] sm:text-[11px] opacity-60 mt-1">Digital & Dokumen Fisik</p>
                     </div>
                     <div class="ui-card p-3.5 sm:p-4 rounded-xl border transition duration-200">
@@ -304,13 +332,13 @@
                             <p class="text-[11px] sm:text-xs font-medium opacity-60">Siswa Aktif (Buku Induk)</p>
                             <span class="p-1 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 text-xs">🎓</span>
                         </div>
-                        <h3 class="text-xl sm:text-2xl font-bold mt-1.5">1,084</h3>
-                        <p class="text-[10px] sm:text-[11px] opacity-60 mt-1">Tersebar di 36 Rombel</p>
+                        <h3 id="dash-stat-siswa-aktif" class="text-xl sm:text-2xl font-bold mt-1.5">0</h3>
+                        <p id="dash-stat-siswa-kelas" class="text-[10px] sm:text-[11px] opacity-60 mt-1">Belum ada data kelas</p>
                     </div>
                 </div>
 
                 <!-- MAIN WORKFLOW CARD: SURAT MASUK TERAKHIR -->
-                <div class="ui-card rounded-xl border overflow-hidden">
+                <div data-role-visible="operator,kepala_tu,kepala_sekolah" class="ui-card rounded-xl border overflow-hidden">
                     <div class="px-4 py-3 border-b border-gray-500/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
                         <div>
                             <h4 class="text-xs sm:text-sm font-bold">Agenda Surat Masuk Terbaru & Status Disposisi</h4>
@@ -349,7 +377,7 @@
                             <option value="Diarsipkan">Diarsipkan</option>
                         </select>
                     </div>
-                    <button onclick="openRekamSuratMasukModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-center shadow-sm">
+                    <button data-role-visible="operator" onclick="openRekamSuratMasukModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-center shadow-sm">
                         + Rekam Surat Masuk
                     </button>
                 </div>
@@ -385,7 +413,7 @@
                             <option value="Diarsipkan">Diarsipkan</option>
                         </select>
                     </div>
-                    <button onclick="openBuatSuratKeluarModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-center shadow-sm">
+                    <button data-role-visible="operator" onclick="openBuatSuratKeluarModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center justify-center shadow-sm">
                         + Buat Surat Keluar
                     </button>
                 </div>
@@ -442,18 +470,21 @@
                 </div>
             </div>
 
-            <!-- TAB 5: BUKU INDUK SISWA (FROZEN / UNTOUCHED STRUCTURALLY) -->
+            <!-- TAB 5: BUKU INDUK SISWA -->
             <div id="tab-siswa" class="space-y-6 hidden">
                 <div class="ui-card p-4 rounded-2xl border flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                        <input type="text" placeholder="Cari nama, NISN, NIK..." class="ui-input px-3.5 py-2 text-xs rounded-xl w-full sm:w-64 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[38px] sm:min-h-0">
-                        <select class="ui-input px-3 py-2 text-xs rounded-xl w-full sm:w-auto min-h-[38px] sm:min-h-0">
-                            <option>Semua Kelas</option>
-                            <option>X-A</option>
-                            <option>XI-IPA 1</option>
+                        <input type="text" id="search-siswa" oninput="renderSiswaTable()" placeholder="Cari nama, NIS, NISN..." class="ui-input px-3.5 py-2 text-xs rounded-xl w-full sm:w-64 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[38px] sm:min-h-0">
+                        <select id="filter-siswa-status" onchange="renderSiswaTable()" class="ui-input px-3 py-2 text-xs rounded-xl w-full sm:w-auto min-h-[38px] sm:min-h-0">
+                            <option value="semua">Semua Status</option>
+                            <option value="Aktif">Aktif</option>
+                            <option value="Lulus">Lulus</option>
+                            <option value="Pindah">Pindah</option>
+                            <option value="Keluar">Keluar</option>
+                            <option value="DO">DO</option>
                         </select>
                     </div>
-                    <button onclick="alert('Fungsi Tambah Siswa Baru siap dikembangkan.')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 sm:py-2 rounded-xl text-xs font-medium transition min-h-[38px] sm:min-h-0 flex items-center justify-center">
+                    <button data-role-visible="operator" onclick="openTambahSiswaModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 sm:py-2 rounded-xl text-xs font-medium transition min-h-[38px] sm:min-h-0 flex items-center justify-center">
                         + Tambah Siswa Baru
                     </button>
                 </div>
@@ -464,23 +495,13 @@
                             <thead>
                                 <tr class="ui-table-header border-b text-[11px] font-semibold uppercase tracking-wider">
                                     <th class="px-4 sm:px-6 py-3">Siswa</th>
-                                    <th class="px-4 sm:px-6 py-3">NISN / NIS</th>
-                                    <th class="px-4 sm:px-6 py-3">Kelas</th>
+                                    <th class="px-4 sm:px-6 py-3">NIS / NISN</th>
+                                    <th class="px-4 sm:px-6 py-3">Kelas Awal</th>
                                     <th class="px-4 sm:px-6 py-3">Status Buku Induk</th>
                                     <th class="px-4 sm:px-6 py-3 text-right">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-500/10 text-xs">
-                                <tr class="ui-table-row">
-                                    <td class="px-4 sm:px-6 py-3.5 font-semibold">Budi Santoso<br><span class="opacity-50 font-normal">Laki-laki</span></td>
-                                    <td class="px-4 sm:px-6 py-3.5 opacity-80 whitespace-nowrap">0051234567 / 23241001</td>
-                                    <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 font-medium">XI-IPA 1</span></td>
-                                    <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">3/4 Dokumen Verified</span></td>
-                                    <td class="px-4 sm:px-6 py-3.5 text-right whitespace-nowrap">
-                                        <button onclick="openStudentDetail('Budi Santoso')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium px-2 py-1 inline-flex items-center">Buka Detail Buku Induk</button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody id="siswa-table-body" class="divide-y divide-gray-500/10 text-xs"></tbody>
                         </table>
                     </div>
                 </div>
@@ -499,17 +520,20 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div class="p-3 rounded-lg border border-slate-500/10 bg-black/5 dark:bg-white/5">
                             <p class="text-[11px] font-medium opacity-60">Alumni Terdata</p>
-                            <h3 class="text-lg font-bold mt-0.5">3,420</h3>
+                            <h3 id="alumni-stat-total" class="text-lg font-bold mt-0.5">0</h3>
                         </div>
                         <div class="p-3 rounded-lg border border-slate-500/10 bg-black/5 dark:bg-white/5">
                             <p class="text-[11px] font-medium opacity-60">Kuliah (PTN/PTS)</p>
-                            <h3 class="text-lg font-bold mt-0.5">68%</h3>
+                            <h3 id="alumni-stat-kuliah" class="text-lg font-bold mt-0.5">0%</h3>
                         </div>
                         <div class="p-3 rounded-lg border border-slate-500/10 bg-black/5 dark:bg-white/5">
                             <p class="text-[11px] font-medium opacity-60">Kerja / Wirausaha</p>
-                            <h3 class="text-lg font-bold mt-0.5">32%</h3>
+                            <h3 id="alumni-stat-kerja" class="text-lg font-bold mt-0.5">0%</h3>
                         </div>
                     </div>
+                    <button id="alumni-belum-terdata-badge" onclick="filterAlumniBelumTerdata()" class="mt-3 w-full text-left p-3 rounded-lg border border-amber-500/20 bg-amber-500/10 hover:bg-amber-500/20 transition hidden">
+                        <span class="text-[11px] font-semibold text-amber-600 dark:text-amber-400">⚠ <span id="alumni-belum-terdata-count">0</span> siswa baru lulus, jenjang lanjutan belum diisi — klik untuk lihat</span>
+                    </button>
                 </div>
 
                 <!-- TRACING ALUMNI PER SISWA -->
@@ -523,7 +547,7 @@
                             <option value="semua">Semua Status</option>
                             <option value="Kuliah">Melanjutkan Kuliah</option>
                             <option value="Kerja">Bekerja</option>
-                            <option value="Belum Bekerja">Belum Bekerja / Mencari</option>
+                            <option value="Belum Diketahui">Belum Diketahui / Mencari</option>
                             <option value="Lainnya">Lainnya</option>
                         </select>
                     </div>
@@ -556,7 +580,49 @@
                             <label class="block text-[11px] font-medium opacity-70 mb-1">Nama Resmi Instansi / Sekolah</label>
                             <input type="text" id="input-school-name" value="SMA Negeri 1 Jakarta" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
-                        <button onclick="updateSchoolIdentity()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition shadow-sm">Simpan Identitas SIMARTA</button>
+                        <button data-role-visible="operator" onclick="updateSchoolIdentity()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition shadow-sm">Simpan Identitas SIMARTA</button>
+                    </div>
+                </div>
+
+                <!-- GANTI PASSWORD — semua peran -->
+                <div class="ui-card p-4 sm:p-5 rounded-xl border space-y-3 max-w-2xl w-full">
+                    <h4 class="text-xs sm:text-sm font-bold border-b border-gray-500/10 pb-2 mb-1">Ganti Password Akun Saya</h4>
+                    <div id="cp-error" class="hidden text-[11px] font-medium text-red-600 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"></div>
+                    <div>
+                        <label class="block text-[11px] font-medium opacity-70 mb-1">Password Lama</label>
+                        <input type="password" id="cp-old-password" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Kosongkan jika masih pakai password default">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium opacity-70 mb-1">Password Baru</label>
+                        <input type="password" id="cp-new-password" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Minimal 8 karakter">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium opacity-70 mb-1">Konfirmasi Password Baru</label>
+                        <input type="password" id="cp-confirm-password" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <button onclick="doChangePassword()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition shadow-sm">Ganti Password</button>
+                </div>
+
+                <!-- MANAJEMEN PENGGUNA — khusus operator -->
+                <div data-role-visible="operator" class="ui-card p-4 sm:p-5 rounded-xl border space-y-3 max-w-2xl w-full">
+                    <h4 class="text-xs sm:text-sm font-bold border-b border-gray-500/10 pb-2 mb-1">Manajemen Akun Pengguna</h4>
+                    <p class="text-[11px] opacity-60">Kelola akun Operator, Kepala TU, dan Kepala Sekolah. Hanya operator yang bisa membuat/menonaktifkan akun.</p>
+                    <div id="user-mgmt-list" class="text-xs divide-y divide-gray-500/10 border rounded-lg overflow-hidden"></div>
+                    <button onclick="loadUserList()" class="text-[11px] text-blue-600 dark:text-blue-400 font-semibold hover:underline">Muat ulang daftar pengguna</button>
+
+                    <div class="pt-2 border-t border-gray-500/10 space-y-2">
+                        <p class="text-[11px] font-bold opacity-70">Tambah Akun Baru</p>
+                        <div id="cu-error" class="hidden text-[11px] font-medium text-red-600 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2"></div>
+                        <input type="text" id="cu-username" placeholder="Username" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="cu-nama" placeholder="Nama Lengkap" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select id="cu-role" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="operator">Operator / Admin</option>
+                            <option value="kepala_tu">Kepala Tata Usaha</option>
+                            <option value="kepala_sekolah">Kepala Sekolah</option>
+                            <option value="kepala_bkk">Kepala BKK (baca siswa + kelola Alumni)</option>
+                        </select>
+                        <input type="password" id="cu-password" placeholder="Password awal (minimal 8 karakter)" class="ui-input w-full px-3 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button onclick="doCreateUser()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition shadow-sm">Buat Akun</button>
                     </div>
                 </div>
             </div>
@@ -713,27 +779,28 @@
             <div class="p-4 space-y-3 overflow-y-auto flex-1 text-xs">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Kategori Surat</label>
+                        <select id="sk-kategori" onchange="onSkKategoriChange()" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Jenis Surat</label>
+                        <select id="sk-jenis" onchange="onSkJenisChange()" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
                         <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">No. Surat</label>
                         <input type="text" id="sk-nomor" placeholder="Otomatis jika dikosongkan" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Jenis Surat</label>
-                        <select id="sk-jenis" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option>Surat Keterangan</option>
-                            <option>Undangan Official</option>
-                            <option>Edaran</option>
-                            <option>Keputusan</option>
-                            <option>Lainnya</option>
-                        </select>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tujuan Surat</label>
+                        <input type="text" id="sk-tujuan" list="sk-tujuan-list" placeholder="Orang Tua / Wali Siswa Kelas XII" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <datalist id="sk-tujuan-list"></datalist>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tujuan Surat</label>
-                    <input type="text" id="sk-tujuan" placeholder="Orang Tua / Wali Siswa Kelas XII" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
                     <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Perihal</label>
-                    <input type="text" id="sk-perihal" placeholder="Pemberitahuan Pelaksanaan..." class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="sk-perihal" placeholder="Pemberitahuan Pelaksanaan... / Keperluan pendaftaran SBMPTN" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
@@ -741,8 +808,12 @@
                         <input type="date" id="sk-tanggal" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Pembuat / Konseptor</label>
-                        <input type="text" id="sk-konseptor" placeholder="Nama Staff TU" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Sifat</label>
+                        <select id="sk-sifat" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Biasa">Biasa</option>
+                            <option value="Segera">Segera</option>
+                            <option value="Rahasia">Rahasia</option>
+                        </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Status</label>
@@ -753,8 +824,61 @@
                         </select>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Berkas Surat (wajib)</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Pembuat / Konseptor</label>
+                        <input type="text" id="sk-konseptor" placeholder="Nama Staff TU" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Lampiran</label>
+                        <select id="sk-lampiran" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Tidak">Tidak Ada</option>
+                            <option value="Ada">Ada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- INSTRUKSI: jenis ini SECARA ARSITEKTUR bisa di-generate (sudah ada di taksonomi
+                     'keluarga'-nya), tapi template Google Docs untuk keluarga itu belum dikonfigurasi
+                     admin. Bukan hardcode 1 jenis — panel ini otomatis muncul untuk keluarga apa pun
+                     yang belum punya Script Property template-nya. -->
+                <div id="sk-generate-belum-siap" class="hidden p-3 rounded-lg border border-amber-500/30 bg-amber-500/5">
+                    <p class="text-[11px] font-semibold text-amber-600 dark:text-amber-400">ℹ️ Generate otomatis belum aktif untuk keluarga ini</p>
+                    <p id="sk-generate-belum-siap-text" class="text-[11px] opacity-70 mt-1"></p>
+                </div>
+
+                <!-- PANEL GENERATE OTOMATIS: hanya muncul untuk keluarga yang template-nya sudah dikonfigurasi -->
+                <div id="sk-generate-panel" class="hidden space-y-3 p-3 rounded-lg border border-blue-500/30 bg-blue-500/5">
+                    <p class="text-[11px] font-semibold text-blue-600 dark:text-blue-400">✨ Jenis ini bisa di-generate otomatis (PDF langsung jadi, tanpa upload manual)</p>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Siswa yang Diterangkan</label>
+                        <input type="text" id="sk-siswa-cari" list="sk-siswa-list" placeholder="Ketik nama siswa..." oninput="onSkSiswaPick()" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <datalist id="sk-siswa-list"></datalist>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">NISN/NIS</label>
+                            <input type="text" id="sk-nisnis" readonly class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg bg-black/5 dark:bg-white/10">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Kelas</label>
+                            <input type="text" id="sk-kelas-siswa" readonly class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg bg-black/5 dark:bg-white/10">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Penandatangan</label>
+                            <input type="text" id="sk-penandatangan" placeholder="Nama Kepala Sekolah" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Jabatan</label>
+                            <input type="text" id="sk-jabatan" value="Kepala Sekolah" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sk-file-wrap">
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Berkas Surat (wajib untuk jenis non-otomatis)</label>
                     <input type="file" id="sk-file" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <p id="sk-error" class="text-[11px] text-red-500 font-medium hidden"></p>
@@ -766,64 +890,47 @@
         </div>
     </div>
 
-    <!-- MODAL DETAIL BUKU INDUK SISWA (FROZEN / PRESERVED) -->
+    <!-- MODAL DETAIL BUKU INDUK SISWA -->
     <div id="modal-student" role="dialog" aria-modal="true" aria-labelledby="modal-student-name" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-2 sm:p-4">
         <div class="ui-card rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden border max-h-[92vh] flex flex-col">
             <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-gray-500/10 flex justify-between items-start bg-black/5 dark:bg-white/5 flex-shrink-0">
                 <div class="pr-4 min-w-0">
-                    <h3 class="text-sm sm:text-base font-bold truncate" id="modal-student-name">Budi Santoso</h3>
-                    <p class="text-[11px] sm:text-xs opacity-60 break-all sm:break-normal">NISN: 0051234567 | NIS: 23241001 | NIK: 3171012345670001</p>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h3 class="text-sm sm:text-base font-bold truncate" id="modal-student-name">-</h3>
+                        <span id="modal-student-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-medium border bg-emerald-500/10 text-emerald-600 border-emerald-500/20">-</span>
+                    </div>
+                    <p class="text-[11px] sm:text-xs opacity-60 break-all sm:break-normal" id="modal-student-subinfo">-</p>
+                    <button data-role-visible="operator" onclick="openUbahStatusModal()" class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold hover:underline mt-1">Ubah Status Siswa</button>
                 </div>
                 <button id="modal-close-btn" onclick="closeStudentDetail()" aria-label="Tutup detail siswa" class="opacity-50 hover:opacity-100 font-bold p-1 text-base min-h-[36px] min-w-[36px] flex items-center justify-center">✕</button>
             </div>
             
             <div class="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1 custom-scrollbar">
                 <div>
-                    <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider mb-2">Lifecycle Progression</p>
-                    <div class="flex items-center space-x-1.5 sm:space-x-2 text-xs flex-wrap gap-y-2">
-                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-emerald-500/10 text-emerald-600 font-medium border border-emerald-500/20 text-[11px]">Masuk (2023)</span>
-                        <span class="opacity-30">→</span>
-                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-emerald-500/10 text-emerald-600 font-medium border border-emerald-500/20 text-[11px]">Kelas X</span>
-                        <span class="opacity-30">→</span>
-                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-blue-600 text-white font-semibold text-[11px]">Kelas XI (Aktif)</span>
-                        <span class="opacity-30">→</span>
-                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-black/5 dark:bg-white/5 opacity-40 text-[11px]">Kelas XII</span>
-                        <span class="opacity-30">→</span>
-                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-black/5 dark:bg-white/5 opacity-40 text-[11px]">Lulus</span>
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider">Riwayat Masuk → Lulus</p>
+                        <button data-role-visible="operator" onclick="openTambahRiwayatKelasModal()" class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold hover:underline">+ Tambah Riwayat Kelas</button>
+                    </div>
+                    <div id="modal-student-riwayat" class="flex items-center space-x-1.5 sm:space-x-2 text-xs flex-wrap gap-y-2">
+                        <span class="opacity-50 text-[11px]">Memuat riwayat...</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
                     <div class="space-y-2 md:border-r border-gray-500/10 md:pr-4">
                         <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider mb-2">Identitas & Orang Tua / Wali</p>
-                        <p class="text-xs"><strong>Tempat/Tgl Lahir:</strong> Jakarta, 14 Mei 2008</p>
-                        <p class="text-xs"><strong>Nama Ayah:</strong> Rahmat Santoso</p>
-                        <p class="text-xs"><strong>Nama Ibu:</strong> Siti Aminah</p>
-                        <p class="text-xs"><strong>No. HP Wali:</strong> 0812-9988-7766</p>
+                        <p class="text-xs"><strong>Tempat/Tgl Lahir:</strong> <span id="modal-student-ttl">-</span></p>
+                        <p class="text-xs"><strong>Nama Ayah:</strong> <span id="modal-student-ayah">-</span></p>
+                        <p class="text-xs"><strong>Nama Ibu:</strong> <span id="modal-student-ibu">-</span></p>
+                        <p class="text-xs"><strong>Alamat:</strong> <span id="modal-student-alamat">-</span></p>
                     </div>
 
-                    <div class="space-y-2 md:border-r border-gray-500/10 md:pr-4">
-                        <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider mb-2">Akademik</p>
-                        <span class="text-[10px] px-2 py-0.5 rounded font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20 uppercase tracking-wider inline-block mb-1">Blueprint Status</span>
-                        <p class="text-xs opacity-60">Data akademik (nilai, rapor, prestasi) terintegrasi secara terpusat.</p>
-                    </div>
-                    
                     <div class="space-y-2">
-                        <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider mb-2">Kelengkapan Dokumen Siswa</p>
-                        <div class="space-y-1.5 text-xs">
-                            <div class="flex justify-between items-center p-2 rounded bg-black/5 dark:bg-white/5">
-                                <span>Kartu Keluarga (KK)</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">✓ Tersedia</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 rounded bg-black/5 dark:bg-white/5">
-                                <span>Akta Kelahiran</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">✓ Tersedia</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 rounded bg-black/5 dark:bg-white/5">
-                                <span>Ijazah SMP / Mts</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20">⚠ Verifikasi</span>
-                            </div>
+                        <div class="flex items-center justify-between mb-1">
+                            <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider">Status Pasca-Lulus (Alumni)</p>
+                            <button data-role-visible="operator,kepala_bkk" onclick="openUpdateAlumniModal()" class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold hover:underline">Update</button>
                         </div>
+                        <div id="modal-student-alumni-block" class="text-xs opacity-60">Siswa masih aktif / belum ada data pasca-lulus.</div>
                     </div>
                 </div>
             </div>
@@ -834,13 +941,200 @@
         </div>
     </div>
 
+    <!-- MODAL: TAMBAH SISWA BARU -->
+    <div id="modal-tambah-siswa" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3 sm:p-4">
+        <div class="ui-card rounded-xl shadow-2xl w-full max-w-xl overflow-hidden border max-h-[92vh] flex flex-col">
+            <div class="px-4 py-3 border-b border-gray-500/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
+                <h3 class="text-xs sm:text-sm font-bold">Tambah Siswa Baru (Buku Induk)</h3>
+                <button onclick="closeTambahSiswaModal()" aria-label="Tutup form" class="opacity-50 hover:opacity-100 font-bold p-1 text-base">✕</button>
+            </div>
+            <div class="p-4 space-y-3 overflow-y-auto flex-1 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">NIS</label>
+                        <input type="text" id="ts-nis" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">NISN</label>
+                        <input type="text" id="ts-nisn" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Nama Lengkap</label>
+                    <input type="text" id="ts-nama" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tempat Lahir</label>
+                        <input type="text" id="ts-tempat-lahir" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tgl Lahir</label>
+                        <input type="date" id="ts-tanggal-lahir" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Jenis Kelamin</label>
+                        <select id="ts-jk" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Nama Ayah</label>
+                        <input type="text" id="ts-ayah" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Nama Ibu</label>
+                        <input type="text" id="ts-ibu" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Alamat</label>
+                    <input type="text" id="ts-alamat" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tahun Masuk</label>
+                        <input type="text" id="ts-tahun-masuk" placeholder="2026" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Kelas Awal</label>
+                        <input type="text" id="ts-kelas-awal" placeholder="X-A" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <p id="ts-error" class="text-[11px] text-red-500 font-medium hidden"></p>
+            </div>
+            <div class="px-4 py-2.5 bg-black/5 dark:bg-white/5 border-t border-gray-500/10 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button onclick="closeTambahSiswaModal()" class="w-full sm:w-auto px-3.5 py-1.5 bg-slate-500/20 hover:opacity-80 text-xs font-semibold rounded-lg">Batal</button>
+                <button id="btn-submit-ts" onclick="submitTambahSiswa()" class="w-full sm:w-auto px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg">Simpan Siswa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: TAMBAH RIWAYAT KELAS -->
+    <div id="modal-riwayat-kelas" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3 sm:p-4">
+        <div class="ui-card rounded-xl shadow-2xl w-full max-w-md overflow-hidden border">
+            <div class="px-4 py-3 border-b border-gray-500/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
+                <h3 class="text-xs sm:text-sm font-bold">Tambah Riwayat Kenaikan Kelas</h3>
+                <button onclick="closeTambahRiwayatKelasModal()" aria-label="Tutup form" class="opacity-50 hover:opacity-100 font-bold p-1 text-base">✕</button>
+            </div>
+            <div class="p-4 space-y-3 text-xs">
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tahun Ajaran</label>
+                    <input type="text" id="rk-tahun-ajaran" placeholder="2026/2027" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Kelas</label>
+                    <input type="text" id="rk-kelas" placeholder="XI-IPA 1" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Wali Kelas</label>
+                    <input type="text" id="rk-wali-kelas" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Status</label>
+                    <select id="rk-status-naik" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Naik">Naik Kelas</option>
+                        <option value="Tinggal Kelas">Tinggal Kelas</option>
+                        <option value="Lulus">Lulus</option>
+                        <option value="Pindah">Pindah</option>
+                        <option value="Keluar">Keluar</option>
+                    </select>
+                </div>
+                <p id="rk-error" class="text-[11px] text-red-500 font-medium hidden"></p>
+            </div>
+            <div class="px-4 py-2.5 bg-black/5 dark:bg-white/5 border-t border-gray-500/10 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button onclick="closeTambahRiwayatKelasModal()" class="w-full sm:w-auto px-3.5 py-1.5 bg-slate-500/20 hover:opacity-80 text-xs font-semibold rounded-lg">Batal</button>
+                <button id="btn-submit-rk" onclick="submitTambahRiwayatKelas()" class="w-full sm:w-auto px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg">Simpan Riwayat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: UPDATE STATUS ALUMNI -->
+    <div id="modal-update-alumni" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3 sm:p-4">
+        <div class="ui-card rounded-xl shadow-2xl w-full max-w-md overflow-hidden border">
+            <div class="px-4 py-3 border-b border-gray-500/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
+                <h3 class="text-xs sm:text-sm font-bold">Update Status Alumni</h3>
+                <button onclick="closeUpdateAlumniModal()" aria-label="Tutup form" class="opacity-50 hover:opacity-100 font-bold p-1 text-base">✕</button>
+            </div>
+            <div class="p-4 space-y-3 text-xs">
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tahun Lulus</label>
+                    <input type="text" id="ua-tahun-lulus" placeholder="2026" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Jenjang Lanjutan</label>
+                    <select id="ua-jenjang" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Kuliah">Kuliah</option>
+                        <option value="Kerja">Kerja</option>
+                        <option value="Lainnya">Lainnya</option>
+                        <option value="Belum Diketahui">Belum Diketahui</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Institusi / Perusahaan</label>
+                    <input type="text" id="ua-institusi" placeholder="Universitas Indonesia — Ilmu Komputer" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Kontak</label>
+                    <input type="text" id="ua-kontak" placeholder="0812-xxxx-xxxx" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Catatan</label>
+                    <input type="text" id="ua-catatan" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <p id="ua-error" class="text-[11px] text-red-500 font-medium hidden"></p>
+            </div>
+            <div class="px-4 py-2.5 bg-black/5 dark:bg-white/5 border-t border-gray-500/10 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button onclick="closeUpdateAlumniModal()" class="w-full sm:w-auto px-3.5 py-1.5 bg-slate-500/20 hover:opacity-80 text-xs font-semibold rounded-lg">Batal</button>
+                <button id="btn-submit-ua" onclick="submitUpdateAlumni()" class="w-full sm:w-auto px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg">Simpan Status Alumni</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: UBAH STATUS SISWA -->
+    <div id="modal-ubah-status" role="dialog" aria-modal="true" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center hidden z-50 p-3 sm:p-4">
+        <div class="ui-card rounded-xl shadow-2xl w-full max-w-md overflow-hidden border">
+            <div class="px-4 py-3 border-b border-gray-500/10 flex justify-between items-center bg-black/5 dark:bg-white/5">
+                <h3 class="text-xs sm:text-sm font-bold">Ubah Status Siswa</h3>
+                <button onclick="closeUbahStatusModal()" aria-label="Tutup form" class="opacity-50 hover:opacity-100 font-bold p-1 text-base">✕</button>
+            </div>
+            <div class="p-4 space-y-3 text-xs">
+                <div>
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Status Baru</label>
+                    <select id="us-status" onchange="toggleUsTahunLulusField()" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Aktif">Aktif</option>
+                        <option value="Lulus">Lulus</option>
+                        <option value="Pindah">Pindah</option>
+                        <option value="Keluar">Keluar</option>
+                        <option value="DO">DO</option>
+                    </select>
+                </div>
+                <div id="us-tahun-lulus-wrap" class="hidden">
+                    <label class="block text-[10px] font-bold opacity-60 uppercase mb-1">Tahun Lulus</label>
+                    <input type="text" id="us-tahun-lulus" placeholder="2026" class="ui-input w-full px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-[10px] opacity-50 mt-1">Siswa otomatis muncul di tab Alumni sebagai "Belum Diketahui" — detail jenjang lanjutan bisa diisi belakangan.</p>
+                </div>
+                <p id="us-error" class="text-[11px] text-red-500 font-medium hidden"></p>
+            </div>
+            <div class="px-4 py-2.5 bg-black/5 dark:bg-white/5 border-t border-gray-500/10 flex flex-col-reverse sm:flex-row justify-end gap-2">
+                <button onclick="closeUbahStatusModal()" class="w-full sm:w-auto px-3.5 py-1.5 bg-slate-500/20 hover:opacity-80 text-xs font-semibold rounded-lg">Batal</button>
+                <button id="btn-submit-us" onclick="submitUbahStatus()" class="w-full sm:w-auto px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg">Simpan Status</button>
+            </div>
+        </div>
+    </div>
+
+    </div><!-- /#app-shell -->
+
     <!-- JAVASCRIPT LOGIC -->
     <script>
         /* ================= SIMARTA BACKEND CONFIG ================= */
         // Ganti URL ini dengan URL Web App hasil deploy Google Apps Script (lihat SIMARTA_BACKEND_SETUP.md).
         // Frontend HANYA mengetahui URL Web App ini. Semua credential/secret tetap di sisi Apps Script.
         const SIMARTA_CONFIG = {
-            WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbzfhKk4LZzt6zzWge4YXj4vLFPwHC9Y7NRubwJ5bj-cv9KJ5Wb-QfoRXiAVx2R8jw/exec'
+            WEBAPP_URL: 'PASTE_GOOGLE_APPS_SCRIPT_WEBAPP_URL_DI_SINI'
         };
 
         function simartaBackendConfigured() {
@@ -858,16 +1152,22 @@
         }
 
         // Panggil backend Apps Script. action dikirim di payload, dibaca via e.parameter/e.postData di server.
+        // Token sesi login disisipkan otomatis ke payload (kecuali action 'login' itu sendiri) supaya
+        // pemanggil tidak perlu mengurus token manual di setiap tempat.
         async function callSimartaBackend(action, payload) {
             if (!simartaBackendConfigured()) {
                 throw new Error('KONFIGURASI_BELUM_LENGKAP: SIMARTA_CONFIG.WEBAPP_URL belum diisi. Lihat SIMARTA_BACKEND_SETUP.md.');
+            }
+            const finalPayload = Object.assign({}, payload || {});
+            if (action !== 'login' && SIMARTA_AUTH.session && SIMARTA_AUTH.session.token) {
+                finalPayload.token = SIMARTA_AUTH.session.token;
             }
             let response;
             try {
                 response = await fetch(SIMARTA_CONFIG.WEBAPP_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // hindari CORS preflight ke Apps Script
-                    body: JSON.stringify({ action, payload })
+                    body: JSON.stringify({ action, payload: finalPayload })
                 });
             } catch (networkErr) {
                 throw new Error('NETWORK_ERROR: Frontend gagal menghubungi Apps Script Web App. Periksa koneksi internet dan URL deployment.');
@@ -884,9 +1184,126 @@
             if (!data || data.success !== true) {
                 const err = new Error((data && data.error) || 'UNKNOWN_ERROR: Backend tidak mengembalikan status sukses.');
                 err.code = data && data.error;
+                if (err.code && err.code.indexOf('AUTH_REQUIRED') === 0) {
+                    // Sesi habis/tidak valid di sisi server — paksa kembali ke layar login.
+                    doLogout(true);
+                }
                 throw err;
             }
             return data;
+        }
+
+        /* ================= AUTENTIKASI (3 PERAN: operator, kepala_tu, kepala_sekolah) =================
+         * Frontend statis ini tidak punya cookie session, jadi login disimpan sebagai token di
+         * localStorage browser staf yang bersangkutan (bukan di server Anthropic/artifact — ini file
+         * HTML biasa yang di-hosting sendiri, jadi localStorage aman dipakai di sini).
+         */
+        const SIMARTA_AUTH = { session: null };
+
+        const ROLE_LABEL = {
+            operator: 'Operator / Admin',
+            kepala_tu: 'Kepala Tata Usaha',
+            kepala_sekolah: 'Kepala Sekolah',
+            kepala_bkk: 'Kepala BKK'
+        };
+
+        // Elemen dengan atribut data-role-visible="operator,kepala_tu" hanya tampil untuk role yang disebut.
+        function applyRoleUI() {
+            const role = SIMARTA_AUTH.session ? SIMARTA_AUTH.session.role : null;
+            document.querySelectorAll('[data-role-visible]').forEach(el => {
+                const allowed = el.getAttribute('data-role-visible').split(',').map(s => s.trim());
+                el.classList.toggle('hidden', !role || !allowed.includes(role));
+            });
+
+            const nameEl = document.getElementById('sidebar-user-name');
+            const roleEl = document.getElementById('sidebar-user-role');
+            const avatarEl = document.getElementById('sidebar-user-avatar');
+            if (SIMARTA_AUTH.session) {
+                if (nameEl) nameEl.innerText = SIMARTA_AUTH.session.nama;
+                if (roleEl) roleEl.innerText = ROLE_LABEL[role] || role;
+                if (avatarEl) avatarEl.innerText = (SIMARTA_AUTH.session.nama || '?').trim().charAt(0).toUpperCase();
+            }
+        }
+
+        function showLoginScreen(errorMsg) {
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            const errEl = document.getElementById('login-error');
+            if (errorMsg) {
+                errEl.innerText = errorMsg;
+                errEl.classList.remove('hidden');
+            } else {
+                errEl.classList.add('hidden');
+            }
+        }
+
+        function showAppShell() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+            applyRoleUI();
+            initSimartaDataSetelahLogin();
+        }
+
+        async function doLogin() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-submit-btn');
+            if (!username || !password) {
+                showLoginScreen('Username dan password wajib diisi.');
+                return;
+            }
+            if (!simartaBackendConfigured()) {
+                showLoginScreen('Backend belum dikonfigurasi (SIMARTA_CONFIG.WEBAPP_URL kosong). Ikuti SIMARTA_BACKEND_SETUP.md.');
+                return;
+            }
+            btn.disabled = true;
+            btn.innerText = 'Memproses...';
+            try {
+                const res = await callSimartaBackend('login', { username, password });
+                SIMARTA_AUTH.session = {
+                    token: res.token, username: res.username, nama: res.nama,
+                    role: res.role, expires_at: res.expires_at
+                };
+                localStorage.setItem('simarta_session', JSON.stringify(SIMARTA_AUTH.session));
+                document.getElementById('login-password').value = '';
+                showAppShell();
+                if (res.must_change_password) {
+                    alert('Akun ini masih memakai password default. Silakan segera ganti password lewat menu Identitas & Tema System > Ganti Password.');
+                }
+            } catch (err) {
+                showLoginScreen(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Masuk';
+            }
+        }
+
+        async function doLogout(sessionExpired) {
+            const token = SIMARTA_AUTH.session && SIMARTA_AUTH.session.token;
+            SIMARTA_AUTH.session = null;
+            localStorage.removeItem('simarta_session');
+            if (token) {
+                try { await callSimartaBackend('logout', { token }); } catch (e) { /* abaikan, token sudah dibuang lokal */ }
+            }
+            showLoginScreen(sessionExpired ? 'Sesi login sudah berakhir, silakan masuk kembali.' : null);
+        }
+
+        function restoreSessionFromStorage() {
+            try {
+                const raw = localStorage.getItem('simarta_session');
+                if (!raw) { showLoginScreen(); return; }
+                const session = JSON.parse(raw);
+                if (!session || !session.token || !session.expires_at) { showLoginScreen(); return; }
+                if (new Date(session.expires_at).getTime() < Date.now()) {
+                    localStorage.removeItem('simarta_session');
+                    showLoginScreen('Sesi login sebelumnya sudah kedaluwarsa, silakan masuk kembali.');
+                    return;
+                }
+                SIMARTA_AUTH.session = session;
+                showAppShell();
+            } catch (e) {
+                showLoginScreen();
+            }
         }
 
         function setTheme(themeName) {
@@ -976,6 +1393,7 @@
             } else if (tabId === 'settings') {
                 document.getElementById('page-title').innerText = 'Identitas & Tema System';
                 subtitleEl.innerText = 'Pengaturan visual design system SIMARTA dan identitas instansi';
+                if (SIMARTA_AUTH.session && SIMARTA_AUTH.session.role === 'operator') loadUserList();
             }
 
             if (window.innerWidth < 768) {
@@ -1056,8 +1474,11 @@
             const tbodyDash = document.getElementById('dashboard-surat-masuk-preview');
             if (tbodyDash) {
                 const latest = suratMasukData.slice(0, 3);
-                tbodyDash.innerHTML = latest.map(s => rowHtml(s, true)).join('');
+                tbodyDash.innerHTML = latest.length
+                    ? latest.map(s => rowHtml(s, true)).join('')
+                    : '<tr><td colspan="5" class="px-4 py-5 text-center opacity-50">Belum ada surat masuk.</td></tr>';
             }
+            renderDashboardStats();
         }
 
         async function loadSuratMasukFromBackend() {
@@ -1187,21 +1608,38 @@
                 alert('Berkas ini belum tersimpan di Google Drive (data demo/offline).');
             }
         }
-        function submitDisposisi() {
-            // NOTE: Sesuai milestone backend ini, persistence disposisi BELUM diimplementasikan
-            // (lihat SIMARTA_BACKEND_SETUP.md / instruksi pembangunan). Struktur record surat masuk
-            // (penerima, catatan, status) sudah disediakan backend agar disposisi bisa dipersist
-            // pada milestone berikutnya. Untuk saat ini, perubahan hanya berlaku di tampilan sesi ini
-            // dan TIDAK tersimpan permanen ke Google Sheet — supaya tidak ada klaim "berhasil disimpan" palsu.
+        async function submitDisposisi() {
             if (disposisiTargetId === null) return;
             const s = suratMasukData.find(x => x.id === disposisiTargetId);
             if (!s) return;
-            s.penerima = document.getElementById('disp-penerima').value;
-            s.catatan = document.getElementById('disp-catatan').value;
-            s.status = document.getElementById('disp-status').value;
-            closeDisposisiModal();
-            renderSuratMasuk();
-            alert('Disposisi diperbarui di tampilan. Persistence disposisi ke arsip akan dibangun pada milestone berikutnya.');
+
+            const penerima = document.getElementById('disp-penerima').value;
+            const catatan = document.getElementById('disp-catatan').value;
+            const status = document.getElementById('disp-status').value;
+            const btn = document.querySelector('#modal-disposisi button[onclick="submitDisposisi()"]');
+
+            if (!simartaBackendConfigured()) {
+                // Tidak ada backend untuk dihubungi — perbarui tampilan sesi saja, dan jangan klaim tersimpan.
+                s.penerima = penerima; s.catatan = catatan; s.status = status;
+                closeDisposisiModal();
+                renderSuratMasuk();
+                alert('Backend belum dikonfigurasi (SIMARTA_CONFIG.WEBAPP_URL kosong) — disposisi hanya berubah di tampilan, TIDAK tersimpan permanen.');
+                return;
+            }
+
+            if (btn) { btn.disabled = true; btn.innerText = 'Menyimpan...'; }
+            try {
+                await callSimartaBackend('submitDisposisiSuratMasuk', {
+                    id: disposisiTargetId, penerima, catatan, status
+                });
+                s.penerima = penerima; s.catatan = catatan; s.status = status;
+                closeDisposisiModal();
+                renderSuratMasuk();
+            } catch (err) {
+                alert('Gagal menyimpan disposisi: ' + err.message);
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerText = 'Simpan Disposisi'; }
+            }
         }
 
         /* ================= DATA SURAT KELUAR ================= */
@@ -1250,6 +1688,7 @@
                     </td>
                 </tr>`).join('')
                 : '<tr><td colspan="6" class="px-4 py-5 text-center opacity-50">Tidak ada surat keluar yang cocok dengan pencarian/filter.</td></tr>';
+            renderDashboardStats();
         }
 
         function pratinjauSuratKeluar(id) {
@@ -1273,7 +1712,424 @@
             }
         }
 
+        /* ================= BUKU INDUK SISWA ================= */
+        let siswaData = [];
+        let currentDetailSiswaId = null;
+
+        function statusSiswaBadgeClass(status) {
+            if (status === 'Aktif') return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
+            if (status === 'Lulus') return 'bg-blue-500/10 text-blue-600 border-blue-500/20';
+            if (status === 'Pindah') return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
+            return 'bg-red-500/10 text-red-600 border-red-500/20'; // Keluar / DO
+        }
+
+        function renderSiswaTable() {
+            const tbody = document.getElementById('siswa-table-body');
+            if (!tbody) return;
+            const q = (document.getElementById('search-siswa')?.value || '').toLowerCase();
+            const statusFilter = document.getElementById('filter-siswa-status')?.value || 'semua';
+            const filtered = siswaData.filter(s => {
+                const matchQ = !q || ((s.nama || '') + (s.nis || '') + (s.nisn || '')).toLowerCase().includes(q);
+                const matchStatus = statusFilter === 'semua' || s.status === statusFilter;
+                return matchQ && matchStatus;
+            });
+
+            tbody.innerHTML = filtered.length ? filtered.map(s => `
+                <tr class="ui-table-row hover:bg-black/5 dark:hover:bg-white/5 transition">
+                    <td class="px-4 sm:px-6 py-3.5 font-semibold">${s.nama}<br><span class="opacity-50 font-normal">${s.jenis_kelamin || '-'}</span></td>
+                    <td class="px-4 sm:px-6 py-3.5 opacity-80 whitespace-nowrap">${s.nis} / ${s.nisn || '-'}</td>
+                    <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 font-medium">${s.kelas_awal || '-'}</span></td>
+                    <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-medium border ${statusSiswaBadgeClass(s.status)}">${s.status}</span></td>
+                    <td class="px-4 sm:px-6 py-3.5 text-right whitespace-nowrap">
+                        <button onclick="openStudentDetail('${s.id}')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium px-2 py-1 inline-flex items-center">Buka Detail Buku Induk</button>
+                    </td>
+                </tr>`).join('')
+                : '<tr><td colspan="5" class="px-4 py-5 text-center opacity-50">Belum ada data siswa. Klik "+ Tambah Siswa Baru" untuk mulai mengisi Buku Induk.</td></tr>';
+            renderDashboardStats();
+        }
+
+        async function loadSiswaFromBackend() {
+            if (!simartaBackendConfigured()) { renderDashboardStats(); return; }
+            try {
+                const res = await callSimartaBackend('getSiswa', {});
+                siswaData = res.records || [];
+                renderSiswaTable();
+            } catch (err) {
+                console.error('[SIMARTA] Gagal memuat Buku Induk Siswa dari backend:', err.message);
+            }
+        }
+
+        function openTambahSiswaModal() {
+            document.getElementById('modal-tambah-siswa').classList.remove('hidden');
+        }
+        function closeTambahSiswaModal() {
+            document.getElementById('modal-tambah-siswa').classList.add('hidden');
+        }
+        function showTsError(msg) {
+            const el = document.getElementById('ts-error');
+            el.innerText = msg;
+            el.classList.remove('hidden');
+        }
+        function clearTsError() {
+            document.getElementById('ts-error').classList.add('hidden');
+        }
+
+        async function submitTambahSiswa() {
+            clearTsError();
+            const nis = document.getElementById('ts-nis').value.trim();
+            const nama = document.getElementById('ts-nama').value.trim();
+            const tahunMasuk = document.getElementById('ts-tahun-masuk').value.trim();
+
+            if (!nis || !nama || !tahunMasuk) {
+                showTsError('Mohon lengkapi NIS, Nama, dan Tahun Masuk.');
+                return;
+            }
+            if (!simartaBackendConfigured()) {
+                showTsError('Backend belum dikonfigurasi (SIMARTA_CONFIG.WEBAPP_URL kosong). Ikuti SIMARTA_BACKEND_SETUP.md.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-ts');
+            const originalLabel = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+
+            try {
+                const res = await callSimartaBackend('createSiswa', {
+                    nis, nama,
+                    nisn: document.getElementById('ts-nisn').value.trim(),
+                    tempat_lahir: document.getElementById('ts-tempat-lahir').value.trim(),
+                    tanggal_lahir: document.getElementById('ts-tanggal-lahir').value,
+                    jenis_kelamin: document.getElementById('ts-jk').value,
+                    nama_ayah: document.getElementById('ts-ayah').value.trim(),
+                    nama_ibu: document.getElementById('ts-ibu').value.trim(),
+                    alamat: document.getElementById('ts-alamat').value.trim(),
+                    tahun_masuk: tahunMasuk,
+                    kelas_awal: document.getElementById('ts-kelas-awal').value.trim(),
+                    status: 'Aktif'
+                });
+
+                siswaData.unshift(res.record);
+                ['ts-nis','ts-nisn','ts-nama','ts-tempat-lahir','ts-tanggal-lahir','ts-ayah','ts-ibu','ts-alamat','ts-tahun-masuk','ts-kelas-awal']
+                    .forEach(id => document.getElementById(id).value = '');
+                document.getElementById('ts-jk').selectedIndex = 0;
+                closeTambahSiswaModal();
+                renderSiswaTable();
+            } catch (err) {
+                if (err.code && String(err.code).indexOf('SISWA_SUDAH_TERDAFTAR') === 0) {
+                    showTsError('NIS ini sudah terdaftar di Buku Induk.');
+                } else {
+                    showTsError('Gagal menyimpan: ' + err.message);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalLabel;
+            }
+        }
+
+        /* ---- Riwayat Kelas & Alumni di dalam modal detail siswa ---- */
+
+        function renderRiwayatKelasTimeline(riwayat) {
+            const el = document.getElementById('modal-student-riwayat');
+            if (!el) return;
+            if (!riwayat.length) {
+                el.innerHTML = '<span class="opacity-50 text-[11px]">Belum ada riwayat kelas tercatat.</span>';
+                return;
+            }
+            el.innerHTML = riwayat.map((r, i) => {
+                const isLast = i === riwayat.length - 1;
+                const badge = isLast
+                    ? `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-blue-600 text-white font-semibold text-[11px]">${r.tahun_ajaran}: ${r.kelas}</span>`
+                    : `<span class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-emerald-500/10 text-emerald-600 font-medium border border-emerald-500/20 text-[11px]">${r.tahun_ajaran}: ${r.kelas}</span>`;
+                const arrow = isLast ? '' : '<span class="opacity-30">→</span>';
+                return badge + arrow;
+            }).join('');
+        }
+
+        function renderAlumniBlockInDetail(alumni) {
+            const el = document.getElementById('modal-student-alumni-block');
+            if (!el) return;
+            if (!alumni) {
+                el.innerHTML = 'Siswa masih aktif / belum ada data pasca-lulus.';
+                return;
+            }
+            el.innerHTML = `
+                <p><strong>Lulus:</strong> ${alumni.tahun_lulus || '-'}</p>
+                <p class="mt-1"><strong>Jenjang:</strong> ${alumni.jenjang_lanjutan || '-'}</p>
+                <p class="mt-1"><strong>Institusi/Perusahaan:</strong> ${alumni.institusi_perusahaan || '-'}</p>
+                <p class="mt-1 opacity-50 text-[10px]">Update terakhir: ${fmtTglID((alumni.updated_at || '').slice(0,10))}</p>
+            `;
+        }
+
+        function openTambahRiwayatKelasModal() {
+            if (!currentDetailSiswaId) return;
+            document.getElementById('modal-riwayat-kelas').classList.remove('hidden');
+        }
+        function closeTambahRiwayatKelasModal() {
+            document.getElementById('modal-riwayat-kelas').classList.add('hidden');
+        }
+        function showRkError(msg) {
+            const el = document.getElementById('rk-error');
+            el.innerText = msg;
+            el.classList.remove('hidden');
+        }
+        function clearRkError() {
+            document.getElementById('rk-error').classList.add('hidden');
+        }
+
+        async function submitTambahRiwayatKelas() {
+            clearRkError();
+            const tahunAjaran = document.getElementById('rk-tahun-ajaran').value.trim();
+            const kelas = document.getElementById('rk-kelas').value.trim();
+
+            if (!tahunAjaran || !kelas) {
+                showRkError('Mohon lengkapi Tahun Ajaran dan Kelas.');
+                return;
+            }
+            if (!simartaBackendConfigured()) {
+                showRkError('Backend belum dikonfigurasi.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-rk');
+            const originalLabel = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+
+            try {
+                await callSimartaBackend('addRiwayatKelas', {
+                    siswa_id: currentDetailSiswaId,
+                    tahun_ajaran: tahunAjaran,
+                    kelas: kelas,
+                    wali_kelas: document.getElementById('rk-wali-kelas').value.trim(),
+                    status_naik: document.getElementById('rk-status-naik').value
+                });
+                ['rk-tahun-ajaran','rk-kelas','rk-wali-kelas'].forEach(id => document.getElementById(id).value = '');
+                document.getElementById('rk-status-naik').selectedIndex = 0;
+                closeTambahRiwayatKelasModal();
+                openStudentDetail(currentDetailSiswaId);
+            } catch (err) {
+                if (err.code && String(err.code).indexOf('RIWAYAT_SUDAH_ADA') === 0) {
+                    showRkError('Siswa ini sudah punya riwayat untuk tahun ajaran tersebut.');
+                } else {
+                    showRkError('Gagal menyimpan: ' + err.message);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalLabel;
+            }
+        }
+
+        function openUpdateAlumniModal() {
+            if (!currentDetailSiswaId) return;
+            document.getElementById('modal-update-alumni').classList.remove('hidden');
+        }
+        function closeUpdateAlumniModal() {
+            document.getElementById('modal-update-alumni').classList.add('hidden');
+        }
+        function showUaError(msg) {
+            const el = document.getElementById('ua-error');
+            el.innerText = msg;
+            el.classList.remove('hidden');
+        }
+        function clearUaError() {
+            document.getElementById('ua-error').classList.add('hidden');
+        }
+
+        async function submitUpdateAlumni() {
+            clearUaError();
+            if (!currentDetailSiswaId) return;
+            if (!simartaBackendConfigured()) {
+                showUaError('Backend belum dikonfigurasi.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-ua');
+            const originalLabel = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+
+            try {
+                await callSimartaBackend('upsertAlumni', {
+                    siswa_id: currentDetailSiswaId,
+                    tahun_lulus: document.getElementById('ua-tahun-lulus').value.trim(),
+                    jenjang_lanjutan: document.getElementById('ua-jenjang').value,
+                    institusi_perusahaan: document.getElementById('ua-institusi').value.trim(),
+                    kontak: document.getElementById('ua-kontak').value.trim(),
+                    status_terkini: document.getElementById('ua-jenjang').value,
+                    catatan: document.getElementById('ua-catatan').value.trim()
+                });
+                ['ua-tahun-lulus','ua-institusi','ua-kontak','ua-catatan'].forEach(id => document.getElementById(id).value = '');
+                closeUpdateAlumniModal();
+                openStudentDetail(currentDetailSiswaId);
+                loadAlumniFromBackend();
+            } catch (err) {
+                showUaError('Gagal menyimpan: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalLabel;
+            }
+        }
+
+        /* ---- Ubah Status Siswa (Aktif -> Lulus/Pindah/Keluar/DO), semi-otomatis ke Alumni ---- */
+
+        function toggleUsTahunLulusField() {
+            const isLulus = document.getElementById('us-status').value === 'Lulus';
+            document.getElementById('us-tahun-lulus-wrap').classList.toggle('hidden', !isLulus);
+        }
+
+        function openUbahStatusModal() {
+            if (!currentDetailSiswaId) return;
+            const siswa = siswaData.find(s => s.id === currentDetailSiswaId);
+            if (siswa) {
+                document.getElementById('us-status').value = siswa.status || 'Aktif';
+                document.getElementById('us-tahun-lulus').value = siswa.tahun_lulus || '';
+            }
+            toggleUsTahunLulusField();
+            document.getElementById('modal-ubah-status').classList.remove('hidden');
+        }
+        function closeUbahStatusModal() {
+            document.getElementById('modal-ubah-status').classList.add('hidden');
+        }
+        function showUsError(msg) {
+            const el = document.getElementById('us-error');
+            el.innerText = msg;
+            el.classList.remove('hidden');
+        }
+        function clearUsError() {
+            document.getElementById('us-error').classList.add('hidden');
+        }
+
+        async function submitUbahStatus() {
+            clearUsError();
+            if (!currentDetailSiswaId) return;
+            const statusBaru = document.getElementById('us-status').value;
+            const tahunLulus = document.getElementById('us-tahun-lulus').value.trim();
+
+            if (statusBaru === 'Lulus' && !tahunLulus) {
+                showUsError('Tahun Lulus wajib diisi untuk status Lulus.');
+                return;
+            }
+            if (!simartaBackendConfigured()) {
+                showUsError('Backend belum dikonfigurasi.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-us');
+            const originalLabel = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+
+            try {
+                const res = await callSimartaBackend('updateSiswaStatus', {
+                    siswa_id: currentDetailSiswaId,
+                    status: statusBaru,
+                    tahun_lulus: tahunLulus
+                });
+                const siswa = siswaData.find(s => s.id === currentDetailSiswaId);
+                if (siswa) {
+                    siswa.status = statusBaru;
+                    if (statusBaru === 'Lulus') siswa.tahun_lulus = tahunLulus;
+                }
+                closeUbahStatusModal();
+                renderSiswaTable();
+                openStudentDetail(currentDetailSiswaId);
+                if (res.alumni_stub_created) {
+                    loadAlumniFromBackend();
+                }
+            } catch (err) {
+                showUsError('Gagal menyimpan: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalLabel;
+            }
+        }
+
+        /* ================= TAKSONOMI SURAT KELUAR (Kategori -> Jenis) & MASTER PENERIMA ================= */
+        let simartaTaxonomy = [];
+        let simartaMasterPenerima = [];
+        let simartaKeluargaTersedia = []; // keluarga yang template generate-nya SUDAH dikonfigurasi admin
+
+        async function loadTaxonomyFromBackend() {
+            if (!simartaBackendConfigured()) return;
+            try {
+                const res = await callSimartaBackend('getTaxonomy', {});
+                simartaTaxonomy = res.taxonomy || [];
+                simartaKeluargaTersedia = res.keluarga_tersedia || [];
+            } catch (err) {
+                console.error('[SIMARTA] Gagal memuat taksonomi surat:', err.message);
+            }
+        }
+        async function loadMasterPenerimaFromBackend() {
+            if (!simartaBackendConfigured()) return;
+            try {
+                const res = await callSimartaBackend('getMasterPenerima', {});
+                simartaMasterPenerima = res.records || [];
+                const dl = document.getElementById('sk-tujuan-list');
+                if (dl) dl.innerHTML = simartaMasterPenerima.map(p => `<option value="${p.nama_penerima}">`).join('');
+            } catch (err) {
+                console.error('[SIMARTA] Gagal memuat master penerima:', err.message);
+            }
+        }
+
+        function populateSkKategoriOptions() {
+            const sel = document.getElementById('sk-kategori');
+            const kategoris = [...new Set(simartaTaxonomy.map(t => t.kategori))];
+            sel.innerHTML = kategoris.length
+                ? kategoris.map(k => `<option value="${k}">${k}</option>`).join('')
+                : '<option value="">Taksonomi belum termuat (cek koneksi backend)</option>';
+            onSkKategoriChange();
+        }
+        function onSkKategoriChange() {
+            const kategori = document.getElementById('sk-kategori').value;
+            const jenisSel = document.getElementById('sk-jenis');
+            const items = simartaTaxonomy.filter(t => t.kategori === kategori);
+            jenisSel.innerHTML = items.length
+                ? items.map(t => `<option value="${t.jenis}" data-keluarga="${t.keluarga}">${t.jenis}</option>`).join('')
+                : '<option value="">-</option>';
+            onSkJenisChange();
+        }
+        function onSkJenisChange() {
+            const jenisSel = document.getElementById('sk-jenis');
+            const selected = jenisSel.options[jenisSel.selectedIndex];
+            const keluarga = selected ? selected.getAttribute('data-keluarga') : null;
+            const isGenerate = keluarga && simartaKeluargaTersedia.indexOf(keluarga) !== -1;
+            // Keluarga yang SECARA ARSITEKTUR mendukung generate (terdaftar di TEMPLATE_KELUARGA_MAP
+            // backend) tapi template-nya belum dikonfigurasi admin -> tampilkan instruksi, bukan diam saja.
+            const KELUARGA_MENDUKUNG_GENERATE = ['keterangan','tugas','undangan','pemberitahuan','rekomendasi','pengantar','permohonan','edaran'];
+            const belumSiap = keluarga && !isGenerate && KELUARGA_MENDUKUNG_GENERATE.indexOf(keluarga) !== -1;
+
+            document.getElementById('sk-generate-panel').classList.toggle('hidden', !isGenerate);
+            document.getElementById('sk-file-wrap').classList.toggle('hidden', isGenerate);
+            document.getElementById('btn-submit-sk').innerText = isGenerate ? 'Generate Surat (PDF Otomatis)' : 'Simpan Surat Keluar';
+
+            const infoPanel = document.getElementById('sk-generate-belum-siap');
+            infoPanel.classList.toggle('hidden', !belumSiap);
+            if (belumSiap) {
+                document.getElementById('sk-generate-belum-siap-text').innerText =
+                    'Jenis surat ini termasuk keluarga template "' + keluarga + '". Generate otomatis untuk keluarga ini belum diaktifkan admin — silakan upload berkas manual di bawah untuk sementara, atau minta admin menambahkan template Google Docs (lihat SIMARTA_BACKEND_SETUP.md bagian Generate Document).';
+            }
+        }
+        function onSkSiswaPick() {
+            const val = document.getElementById('sk-siswa-cari').value;
+            const s = siswaData.find(x => x.nama === val);
+            if (!s) return;
+            document.getElementById('sk-nisnis').value = (s.nisn || s.nis || '-');
+            document.getElementById('sk-kelas-siswa').value = s.kelas || '-';
+        }
+        function populateSkSiswaDatalist() {
+            const dl = document.getElementById('sk-siswa-list');
+            if (dl) dl.innerHTML = siswaData.map(s => `<option value="${s.nama}">`).join('');
+        }
+
         function openBuatSuratKeluarModal() {
+            populateSkKategoriOptions();
+            populateSkSiswaDatalist();
+            document.getElementById('sk-siswa-cari').value = '';
+            document.getElementById('sk-nisnis').value = '';
+            document.getElementById('sk-kelas-siswa').value = '';
+            document.getElementById('sk-penandatangan').value = '';
+            document.getElementById('sk-jabatan').value = 'Kepala Sekolah';
             document.getElementById('modal-surat-keluar-baru').classList.remove('hidden');
         }
         function closeBuatSuratKeluarModal() {
@@ -1288,15 +2144,39 @@
             document.getElementById('sk-error').classList.add('hidden');
         }
 
+        function resetSkForm() {
+            ['sk-nomor','sk-tujuan','sk-perihal','sk-tanggal','sk-konseptor','sk-siswa-cari','sk-nisnis','sk-kelas-siswa','sk-penandatangan'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('sk-status').selectedIndex = 0;
+            document.getElementById('sk-sifat').selectedIndex = 0;
+            document.getElementById('sk-lampiran').selectedIndex = 0;
+            document.getElementById('sk-jabatan').value = 'Kepala Sekolah';
+            document.getElementById('sk-file').value = '';
+        }
+
         async function submitSuratKeluar() {
             clearSkError();
+            const jenisSel = document.getElementById('sk-jenis');
+            const selectedOpt = jenisSel.options[jenisSel.selectedIndex];
+            const keluarga = selectedOpt ? selectedOpt.getAttribute('data-keluarga') : null;
+            const isGenerate = keluarga && simartaKeluargaTersedia.indexOf(keluarga) !== -1;
+            if (isGenerate) {
+                await submitGenerateSuratKeterangan();
+            } else {
+                await submitSuratKeluarManual();
+            }
+        }
+
+        async function submitSuratKeluarManual() {
             const nomor = document.getElementById('sk-nomor').value.trim();
             const tujuan = document.getElementById('sk-tujuan').value.trim();
             const perihal = document.getElementById('sk-perihal').value.trim();
             const tgl = document.getElementById('sk-tanggal').value;
+            const kategori = document.getElementById('sk-kategori').value;
             const jenis = document.getElementById('sk-jenis').value;
             const konseptor = document.getElementById('sk-konseptor').value.trim();
             const status = document.getElementById('sk-status').value;
+            const sifat = document.getElementById('sk-sifat').value;
+            const lampiran = document.getElementById('sk-lampiran').value;
             const fileInput = document.getElementById('sk-file');
             const file = fileInput.files && fileInput.files[0];
 
@@ -1322,12 +2202,15 @@
                 const fileBase64 = await fileToBase64(file);
                 const res = await callSimartaBackend('createSuratKeluar', {
                     nomor_surat: nomor,
+                    kategori: kategori,
                     jenis: jenis,
                     tujuan: tujuan,
                     perihal: perihal,
                     tanggal: tgl,
                     konseptor: konseptor || '-',
                     status: status,
+                    sifat: sifat,
+                    lampiran: lampiran,
                     file: {
                         filename: file.name,
                         mimeType: file.type || 'application/octet-stream',
@@ -1335,14 +2218,11 @@
                     }
                 });
 
-                const record = res.record;
-                suratKeluarData.unshift(record);
+                suratKeluarData.unshift(res.record);
                 suratKeluarIsDemo = false;
+                loadMasterPenerimaFromBackend();
 
-                ['sk-nomor','sk-tujuan','sk-perihal','sk-tanggal','sk-konseptor'].forEach(id => document.getElementById(id).value = '');
-                document.getElementById('sk-jenis').selectedIndex = 0;
-                document.getElementById('sk-status').selectedIndex = 0;
-                fileInput.value = '';
+                resetSkForm();
                 closeBuatSuratKeluarModal();
                 renderSuratKeluar();
             } catch (err) {
@@ -1357,59 +2237,237 @@
             }
         }
 
-        /* ================= TRACING ALUMNI PER SISWA ================= */
-        let alumniData = [
-            { nama: 'Anisa Rahmawati', tahunLulus: 2026, status: 'Kuliah', tujuan: 'Universitas Indonesia — Ilmu Komputer', update: '2026-08-10' },
-            { nama: 'Bagus Prakoso', tahunLulus: 2026, status: 'Kerja', tujuan: 'PT Astra Internasional — Staff Produksi', update: '2026-08-05' },
-            { nama: 'Citra Dewanti', tahunLulus: 2026, status: 'Belum Bekerja', tujuan: '-', update: '2026-07-28' },
-            { nama: 'Dimas Fadhilah', tahunLulus: 2026, status: 'Lainnya', tujuan: 'Mengikuti Pendidikan Vokasi Non-Formal', update: '2026-08-12' }
-        ];
+        async function submitGenerateSuratKeterangan() {
+            const nomor = document.getElementById('sk-nomor').value.trim();
+            const tujuan = document.getElementById('sk-tujuan').value.trim();
+            const perihal = document.getElementById('sk-perihal').value.trim();
+            const tgl = document.getElementById('sk-tanggal').value;
+            const kategori = document.getElementById('sk-kategori').value;
+            const jenis = document.getElementById('sk-jenis').value;
+            const status = document.getElementById('sk-status').value;
+            const sifat = document.getElementById('sk-sifat').value;
+            const lampiran = document.getElementById('sk-lampiran').value;
+            const namaSiswa = document.getElementById('sk-siswa-cari').value.trim();
+            const nisnis = document.getElementById('sk-nisnis').value.trim();
+            const kelasSiswa = document.getElementById('sk-kelas-siswa').value.trim();
+            const penandatangan = document.getElementById('sk-penandatangan').value.trim();
+            const jabatan = document.getElementById('sk-jabatan').value.trim();
 
-        function statusAlumniBadgeClass(status) {
-            if (status === 'Kuliah') return 'bg-blue-500/10 text-blue-600 border-blue-500/20';
-            if (status === 'Kerja') return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
-            if (status === 'Belum Bekerja') return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
-            return 'bg-slate-500/10 text-slate-600 dark:text-slate-300 border-slate-500/20';
+            if (!nomor || !tujuan || !perihal || !tgl || !jenis) {
+                showSkError('Mohon lengkapi No. Surat, Tujuan, Perihal, dan Tanggal Diterbitkan.');
+                return;
+            }
+            if (!namaSiswa || !nisnis) {
+                showSkError('Pilih siswa yang diterangkan dari daftar (ketik nama, lalu pilih dari saran).');
+                return;
+            }
+            if (!penandatangan) {
+                showSkError('Nama penandatangan wajib diisi.');
+                return;
+            }
+            if (!simartaBackendConfigured()) {
+                showSkError('Backend belum dikonfigurasi (SIMARTA_CONFIG.WEBAPP_URL kosong). Ikuti SIMARTA_BACKEND_SETUP.md.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-sk');
+            const originalLabel = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Membuat PDF di Google Drive...';
+
+            try {
+                const res = await callSimartaBackend('generateSuratKeterangan', {
+                    nomor_surat: nomor,
+                    kategori: kategori,
+                    jenis: jenis,
+                    tujuan: tujuan,
+                    perihal: perihal,
+                    tanggal: tgl,
+                    status: status,
+                    sifat: sifat,
+                    lampiran: lampiran,
+                    nama_diterangkan: namaSiswa,
+                    nis_nisn: nisnis,
+                    kelas: kelasSiswa,
+                    penandatangan: penandatangan,
+                    jabatan: jabatan
+                });
+
+                suratKeluarData.unshift(res.record);
+                suratKeluarIsDemo = false;
+                loadMasterPenerimaFromBackend();
+
+                resetSkForm();
+                closeBuatSuratKeluarModal();
+                renderSuratKeluar();
+                window.open(res.record.drive_url, '_blank', 'noopener');
+            } catch (err) {
+                if (err.code === 'SURAT_SUDAH_TERDAFTAR') {
+                    showSkError('Surat dengan nomor dan tanggal yang sama sudah terdaftar di arsip.');
+                } else if (err.code && err.code.indexOf('CONFIG_ERROR') === 0) {
+                    showSkError('Template Google Docs belum dikonfigurasi untuk keluarga surat ini. Lihat SIMARTA_BACKEND_SETUP.md bagian Generate Document.');
+                } else {
+                    showSkError('Gagal generate surat: ' + err.message);
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalLabel;
+            }
+        }
+
+        /* ================= TRACING ALUMNI PER SISWA ================= */
+        // State ini HANYA cache/representation dari backend (Google Sheet). Sumber kebenaran = backend.
+        let alumniData = [];
+
+        function statusAlumniBadgeClass(jenjang) {
+            if (jenjang === 'Kuliah') return 'bg-blue-500/10 text-blue-600 border-blue-500/20';
+            if (jenjang === 'Kerja') return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
+            if (jenjang === 'Belum Diketahui') return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
+            return 'bg-slate-500/10 text-slate-600 dark:text-slate-300 border-slate-500/20'; // Lainnya
         }
 
         function renderAlumniTracing() {
             const list = document.getElementById('alumni-tracing-list');
             if (!list) return;
             const statusFilter = document.getElementById('filter-alumni-status')?.value || 'semua';
-            const filtered = alumniData.filter(a => statusFilter === 'semua' || a.status === statusFilter);
+            const filtered = alumniData.filter(a => statusFilter === 'semua' || a.jenjang_lanjutan === statusFilter);
 
             list.innerHTML = filtered.length ? filtered.map(a => `
                 <div class="p-3.5 rounded-lg border border-slate-500/10 bg-black/5 dark:bg-white/5">
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
                             <h5 class="text-xs font-bold truncate">${a.nama}</h5>
-                            <p class="text-[10px] opacity-50 mt-0.5">Lulus ${a.tahunLulus}</p>
+                            <p class="text-[10px] opacity-50 mt-0.5">Lulus ${a.tahun_lulus || '-'}</p>
                         </div>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap border ${statusAlumniBadgeClass(a.status)}">${a.status}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap border ${statusAlumniBadgeClass(a.jenjang_lanjutan)}">${a.jenjang_lanjutan || 'Belum Diketahui'}</span>
                     </div>
-                    <p class="text-xs mt-1.5"><strong>Tujuan:</strong> ${a.tujuan}</p>
+                    <p class="text-xs mt-1.5"><strong>Tujuan:</strong> ${a.institusi_perusahaan || '-'}</p>
                     <div class="flex items-center justify-between mt-2 pt-1.5 border-t border-gray-500/10 text-[10px] opacity-60">
-                        <span>Update terakhir: ${fmtTglID(a.update)}</span>
-                        <button onclick="alert('Form update status alumni ${a.nama} akan diimplementasikan pada tahap coding lanjutan.')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Update Status</button>
+                        <span>Update terakhir: ${fmtTglID((a.updated_at || '').slice(0,10))}</span>
+                        <button onclick="openStudentDetail('${a.siswa_id}')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">Update Status</button>
                     </div>
                 </div>`).join('')
-                : '<div class="p-5 rounded-lg border border-slate-500/10 text-center text-xs opacity-50 md:col-span-2">Tidak ada data alumni untuk status ini.</div>';
+                : '<div class="p-5 rounded-lg border border-slate-500/10 text-center text-xs opacity-50 md:col-span-2">Belum ada data alumni untuk status ini.</div>';
+
+            const belumTerdataCount = alumniData.filter(a => a.jenjang_lanjutan === 'Belum Diketahui').length;
+            const badge = document.getElementById('alumni-belum-terdata-badge');
+            if (badge) {
+                badge.classList.toggle('hidden', belumTerdataCount === 0);
+                document.getElementById('alumni-belum-terdata-count').innerText = belumTerdataCount;
+            }
+            renderDashboardStats();
         }
 
-        renderSuratMasuk();
-        renderSuratKeluar();
-        renderAlumniTracing();
+        function filterAlumniBelumTerdata() {
+            document.getElementById('filter-alumni-status').value = 'Belum Diketahui';
+            renderAlumniTracing();
+        }
 
-        // Muat data asli dari Google Sheet via Apps Script (jika backend sudah dikonfigurasi).
-        // Ini yang membuat data tetap ada setelah refresh browser (acceptance criterion TEST 3).
-        loadSuratMasukFromBackend();
-        loadSuratKeluarFromBackend();
+        async function loadAlumniFromBackend() {
+            if (!simartaBackendConfigured()) { renderDashboardStats(); return; }
+            try {
+                const res = await callSimartaBackend('getAlumni', {});
+                alumniData = res.records || [];
+                renderAlumniTracing();
+            } catch (err) {
+                console.error('[SIMARTA] Gagal memuat data Alumni dari backend:', err.message);
+            }
+        }
 
-        function openStudentDetail(name) {
-            document.getElementById('modal-student-name').innerText = name;
+        /* ================= RINGKASAN DASHBOARD (DIHITUNG DARI DATA ASLI, TIDAK ADA ANGKA PALSU) ================= */
+        function renderDashboardStats() {
+            const elSmBulan = document.getElementById('dash-stat-sm-bulan');
+            if (elSmBulan) {
+                const now = new Date();
+                const bulanIni = suratMasukData.filter(s => {
+                    if (!s.tgl) return false;
+                    const d = new Date(s.tgl + 'T00:00:00');
+                    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+                });
+                elSmBulan.innerText = bulanIni.length;
+                const perluDisposisi = suratMasukData.filter(s => s.status === 'Diterima').length;
+                const elSmDisposisi = document.getElementById('dash-stat-sm-disposisi');
+                if (elSmDisposisi) {
+                    elSmDisposisi.innerHTML = '<span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> ' + perluDisposisi + ' Perlu Disposisi';
+                }
+            }
+            const elSkTotal = document.getElementById('dash-stat-sk-total');
+            if (elSkTotal) {
+                elSkTotal.innerText = suratKeluarData.length;
+                const terbit = suratKeluarData.filter(s => s.status === 'Diterbitkan / Terkirim').length;
+                const elSkTerbit = document.getElementById('dash-stat-sk-terbit');
+                if (elSkTerbit) elSkTerbit.innerText = terbit + ' Terverifikasi & Diarsipkan';
+            }
+            const elArsip = document.getElementById('dash-stat-arsip-total');
+            if (elArsip) {
+                elArsip.innerText = suratMasukData.length + suratKeluarData.length;
+            }
+            const elSiswa = document.getElementById('dash-stat-siswa-aktif');
+            if (elSiswa) {
+                const aktif = siswaData.filter(s => s.status === 'Aktif');
+                elSiswa.innerText = aktif.length;
+                const kelasSet = new Set(aktif.map(s => s.kelas_awal).filter(Boolean));
+                const elSiswaKelas = document.getElementById('dash-stat-siswa-kelas');
+                if (elSiswaKelas) {
+                    elSiswaKelas.innerText = kelasSet.size ? ('Tersebar di ' + kelasSet.size + ' Kelas Awal') : 'Belum ada data kelas';
+                }
+            }
+            const elAlumniTotal = document.getElementById('alumni-stat-total');
+            if (elAlumniTotal) {
+                elAlumniTotal.innerText = alumniData.length;
+                const totalPembagi = alumniData.length || 1;
+                const kuliah = alumniData.filter(a => a.jenjang_lanjutan === 'Kuliah').length;
+                const kerja = alumniData.filter(a => a.jenjang_lanjutan === 'Kerja').length;
+                document.getElementById('alumni-stat-kuliah').innerText = Math.round(kuliah / totalPembagi * 100) + '%';
+                document.getElementById('alumni-stat-kerja').innerText = Math.round(kerja / totalPembagi * 100) + '%';
+            }
+        }
+
+        // Catatan: render*() dan load*FromBackend() awal TIDAK lagi dipanggil di sini langsung —
+        // sekarang dipanggil dari initSimartaDataSetelahLogin() (lihat dekat akhir file), supaya
+        // tidak ada satupun panggilan ke backend sebelum staf berhasil login.
+
+        async function openStudentDetail(siswaId) {
+            currentDetailSiswaId = siswaId;
+            const siswa = siswaData.find(s => s.id === siswaId);
+
+            document.getElementById('modal-student-name').innerText = siswa ? siswa.nama : '-';
+            document.getElementById('modal-student-subinfo').innerText = siswa
+                ? ('NIS: ' + siswa.nis + ' | NISN: ' + (siswa.nisn || '-'))
+                : '-';
+            const badgeEl = document.getElementById('modal-student-status-badge');
+            if (siswa) {
+                badgeEl.innerText = siswa.status;
+                badgeEl.className = 'px-2 py-0.5 rounded-full text-[10px] font-medium border ' + statusSiswaBadgeClass(siswa.status);
+            } else {
+                badgeEl.innerText = '-';
+            }
+            document.getElementById('modal-student-ttl').innerText = siswa
+                ? ((siswa.tempat_lahir || '-') + ', ' + fmtTglID(siswa.tanggal_lahir))
+                : '-';
+            document.getElementById('modal-student-ayah').innerText = siswa ? (siswa.nama_ayah || '-') : '-';
+            document.getElementById('modal-student-ibu').innerText = siswa ? (siswa.nama_ibu || '-') : '-';
+            document.getElementById('modal-student-alamat').innerText = siswa ? (siswa.alamat || '-') : '-';
+            document.getElementById('modal-student-riwayat').innerHTML = '<span class="opacity-50 text-[11px]">Memuat riwayat...</span>';
+            document.getElementById('modal-student-alumni-block').innerText = 'Memuat...';
+
             document.getElementById('modal-student').classList.remove('hidden');
             const closeBtn = document.getElementById('modal-close-btn');
             if (closeBtn) closeBtn.focus();
+
+            if (!simartaBackendConfigured()) {
+                document.getElementById('modal-student-riwayat').innerHTML = '<span class="opacity-50 text-[11px]">Backend belum dikonfigurasi — riwayat tidak dapat dimuat.</span>';
+                document.getElementById('modal-student-alumni-block').innerText = 'Backend belum dikonfigurasi.';
+                return;
+            }
+            try {
+                const res = await callSimartaBackend('getRiwayatLengkapSiswa', { siswa_id: siswaId });
+                renderRiwayatKelasTimeline(res.riwayat_kelas || []);
+                renderAlumniBlockInDetail(res.alumni);
+            } catch (err) {
+                document.getElementById('modal-student-riwayat').innerHTML = '<span class="text-red-500 text-[11px]">Gagal memuat riwayat: ' + err.message + '</span>';
+                document.getElementById('modal-student-alumni-block').innerText = 'Gagal memuat data alumni.';
+            }
         }
 
         function closeStudentDetail() {
@@ -1421,6 +2479,111 @@
             document.getElementById('sidebar-school-name').innerText = val;
             alert('Identitas SIMARTA berhasil diperbarui menjadi: ' + val);
         }
+
+        async function doChangePassword() {
+            const oldPassword = document.getElementById('cp-old-password').value;
+            const newPassword = document.getElementById('cp-new-password').value;
+            const confirmPassword = document.getElementById('cp-confirm-password').value;
+            const errEl = document.getElementById('cp-error');
+            errEl.classList.add('hidden');
+            if (!newPassword || newPassword.length < 8) {
+                errEl.innerText = 'Password baru minimal 8 karakter.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                errEl.innerText = 'Konfirmasi password baru tidak sama.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+            try {
+                await callSimartaBackend('changePassword', { old_password: oldPassword, new_password: newPassword });
+                document.getElementById('cp-old-password').value = '';
+                document.getElementById('cp-new-password').value = '';
+                document.getElementById('cp-confirm-password').value = '';
+                alert('Password berhasil diganti.');
+            } catch (err) {
+                errEl.innerText = err.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        async function loadUserList() {
+            const el = document.getElementById('user-mgmt-list');
+            if (!el || !SIMARTA_AUTH.session || SIMARTA_AUTH.session.role !== 'operator') return;
+            if (!simartaBackendConfigured()) { el.innerHTML = '<p class="p-3 opacity-50 text-[11px]">Backend belum dikonfigurasi.</p>'; return; }
+            el.innerHTML = '<p class="p-3 opacity-50 text-[11px]">Memuat...</p>';
+            try {
+                const res = await callSimartaBackend('listUsers', {});
+                const users = res.records || [];
+                el.innerHTML = users.length ? users.map(u => `
+                    <div class="flex items-center justify-between px-3 py-2">
+                        <div class="min-w-0">
+                            <p class="font-semibold truncate">${u.nama} <span class="opacity-50 font-normal">(${u.username})</span></p>
+                            <p class="text-[10px] opacity-50">${ROLE_LABEL[u.role] || u.role}${u.aktif === false || u.aktif === 'FALSE' ? ' • Nonaktif' : ''}</p>
+                        </div>
+                        <button onclick="toggleUserActive('${u.username}', ${!(u.aktif === false || u.aktif === 'FALSE')})" class="text-[10px] font-semibold hover:underline flex-shrink-0 ${(u.aktif === false || u.aktif === 'FALSE') ? 'text-emerald-600' : 'text-red-600'}">
+                            ${(u.aktif === false || u.aktif === 'FALSE') ? 'Aktifkan' : 'Nonaktifkan'}
+                        </button>
+                    </div>`).join('') : '<p class="p-3 opacity-50 text-[11px]">Belum ada akun.</p>';
+            } catch (err) {
+                el.innerHTML = '<p class="p-3 text-red-500 text-[11px]">Gagal memuat: ' + err.message + '</p>';
+            }
+        }
+
+        async function toggleUserActive(username, aktif) {
+            try {
+                await callSimartaBackend('setUserActive', { username, aktif });
+                loadUserList();
+            } catch (err) {
+                alert('Gagal mengubah status akun: ' + err.message);
+            }
+        }
+
+        async function doCreateUser() {
+            const username = document.getElementById('cu-username').value.trim();
+            const nama = document.getElementById('cu-nama').value.trim();
+            const role = document.getElementById('cu-role').value;
+            const password = document.getElementById('cu-password').value;
+            const errEl = document.getElementById('cu-error');
+            errEl.classList.add('hidden');
+            try {
+                await callSimartaBackend('createUser', { username, nama, role, password });
+                document.getElementById('cu-username').value = '';
+                document.getElementById('cu-nama').value = '';
+                document.getElementById('cu-password').value = '';
+                loadUserList();
+            } catch (err) {
+                errEl.innerText = err.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        // Dipanggil sekali setelah login berhasil (baik login manual maupun sesi dipulihkan dari localStorage).
+        function initSimartaDataSetelahLogin() {
+            renderSuratMasuk();
+            renderSuratKeluar();
+            renderSiswaTable();
+            renderAlumniTracing();
+
+            const role = SIMARTA_AUTH.session ? SIMARTA_AUTH.session.role : null;
+            const bisaLihatPersuratan = ['operator', 'kepala_tu', 'kepala_sekolah'].includes(role);
+
+            // Kepala BKK tidak berwenang atas modul persuratan (lihat ACTION_ROLE_MAP di backend) —
+            // jangan panggil backend untuk itu supaya tidak muncul error AUTH_FORBIDDEN dan tidak
+            // menyisakan data demo yang menyesatkan di dashboard/tab yang sudah disembunyikan.
+            if (bisaLihatPersuratan) {
+                loadSuratMasukFromBackend();
+                loadSuratKeluarFromBackend();
+                loadTaxonomyFromBackend();
+                loadMasterPenerimaFromBackend();
+            }
+            loadSiswaFromBackend();
+            loadAlumniFromBackend();
+        }
+
+        // Titik masuk aplikasi: cek dulu apakah ada sesi login tersimpan sebelum menampilkan apa pun.
+        restoreSessionFromStorage();
     </script>
 </body>
 </html>
