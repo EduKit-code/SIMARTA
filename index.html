@@ -498,6 +498,7 @@
                                     <th class="px-4 sm:px-6 py-3">NIS / NISN</th>
                                     <th class="px-4 sm:px-6 py-3">Kelas Awal</th>
                                     <th class="px-4 sm:px-6 py-3">Status Buku Induk</th>
+                                    <th class="px-4 sm:px-6 py-3" title="Jumlah dokumen (KK/Akta/Ijazah) berstatus Ada">Dokumen</th>
                                     <th class="px-4 sm:px-6 py-3 text-right">Aksi</th>
                                 </tr>
                             </thead>
@@ -915,6 +916,15 @@
                         <span class="opacity-50 text-[11px]">Memuat riwayat...</span>
                     </div>
                 </div>
+
+                <div>
+                    <p class="text-[10px] font-bold opacity-40 uppercase tracking-wider mb-2">Kelengkapan Dokumen</p>
+                    <div id="modal-student-dokumen" class="space-y-1.5 text-xs">
+                        <span class="opacity-50 text-[11px]">Memuat...</span>
+                    </div>
+                    <p class="text-[10px] opacity-40 mt-1.5">Status wajib diisi (Ada/Belum Ada/Menyusul) — lampiran scan opsional, hanya kalau memang perlu.</p>
+                </div>
+                <input type="file" id="dok-scan-file-input" class="hidden" onchange="onDokumenScanFileSelected(event)">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
                     <div class="space-y-2 md:border-r border-gray-500/10 md:pr-4">
@@ -1740,11 +1750,12 @@
                     <td class="px-4 sm:px-6 py-3.5 opacity-80 whitespace-nowrap">${s.nis} / ${s.nisn || '-'}</td>
                     <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 font-medium">${s.kelas_awal || '-'}</span></td>
                     <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-medium border ${statusSiswaBadgeClass(s.status)}">${s.status}</span></td>
+                    <td class="px-4 sm:px-6 py-3.5 whitespace-nowrap">${dokumenRingkasanBadge(s.dokumen)}</td>
                     <td class="px-4 sm:px-6 py-3.5 text-right whitespace-nowrap">
                         <button onclick="openStudentDetail('${s.id}')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium px-2 py-1 inline-flex items-center">Buka Detail Buku Induk</button>
                     </td>
                 </tr>`).join('')
-                : '<tr><td colspan="5" class="px-4 py-5 text-center opacity-50">Belum ada data siswa. Klik "+ Tambah Siswa Baru" untuk mulai mengisi Buku Induk.</td></tr>';
+                : '<tr><td colspan="6" class="px-4 py-5 text-center opacity-50">Belum ada data siswa. Klik "+ Tambah Siswa Baru" untuk mulai mengisi Buku Induk.</td></tr>';
             renderDashboardStats();
         }
 
@@ -1825,6 +1836,131 @@
                 btn.disabled = false;
                 btn.innerText = originalLabel;
             }
+        }
+
+        /* ---- Kelengkapan Dokumen (KK / Akta / Ijazah) ----
+         * KEPUTUSAN DESAIN: status 3-pilihan (Ada/Belum Ada/Menyusul) adalah default WAJIB,
+         * scan/upload adalah OPSIONAL per-dokumen (bukan target massal semua siswa) — supaya
+         * TU bisa cepat menandai kelengkapan tanpa harus scan ratusan siswa. Lihat juga catatan
+         * yang sama di SIMARTA_BukuInduk_Backend.gs (updateDokumenSiswa).
+         */
+        const DOKUMEN_LABEL = { kk: 'Kartu Keluarga (KK)', akta: 'Akta Kelahiran', ijazah: 'Ijazah' };
+        const DOKUMEN_STATUS_OPTIONS = ['Ada', 'Belum Ada', 'Menyusul'];
+        let dokumenJenisAktif = null; // dipakai saat menunggu pemilihan file dari <input type="file">
+
+        function statusDokumenBadgeClass(status) {
+            if (status === 'Ada') return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
+            if (status === 'Menyusul') return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
+            return 'bg-red-500/10 text-red-600 border-red-500/20'; // Belum Ada
+        }
+
+        // Indikator ringkas "x/3" di baris tabel daftar siswa — hijau kalau lengkap, abu kalau belum.
+        function dokumenRingkasanBadge(dokumen) {
+            if (!dokumen) return '<span class="opacity-40">-</span>';
+            const jenisList = Object.keys(DOKUMEN_LABEL);
+            const jumlahAda = jenisList.filter(j => dokumen[j] && dokumen[j].status === 'Ada').length;
+            const cls = jumlahAda === jenisList.length
+                ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                : 'bg-black/5 dark:bg-white/10 opacity-70 border-transparent';
+            return `<span class="px-2 py-0.5 rounded-full text-[10px] font-medium border ${cls}">${jumlahAda}/${jenisList.length} dokumen</span>`;
+        }
+
+        function renderDokumenSiswaBlock(siswa) {
+            const el = document.getElementById('modal-student-dokumen');
+            if (!el) return;
+            if (!siswa || !siswa.dokumen) {
+                el.innerHTML = '<span class="opacity-50 text-[11px]">Data dokumen tidak tersedia.</span>';
+                return;
+            }
+            el.innerHTML = Object.keys(DOKUMEN_LABEL).map(jenis => {
+                const d = siswa.dokumen[jenis] || { status: 'Belum Ada', scan_url: '', scan_nama: '' };
+                const optionsHtml = DOKUMEN_STATUS_OPTIONS.map(opt =>
+                    `<option value="${opt}" ${opt === d.status ? 'selected' : ''}>${opt}</option>`
+                ).join('');
+                const scanLink = d.scan_url
+                    ? `<a href="${d.scan_url}" target="_blank" rel="noopener" class="text-[10px] text-blue-600 dark:text-blue-400 hover:underline">Lihat scan</a>
+                       <button data-role-visible="operator" onclick="hapusScanDokumen('${jenis}')" class="text-[10px] text-red-500 hover:underline">Hapus</button>`
+                    : `<button data-role-visible="operator" onclick="triggerLampirkanScan('${jenis}')" class="text-[10px] text-blue-600 dark:text-blue-400 hover:underline">+ Lampirkan scan</button>`;
+                return `
+                    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-1 border-b border-gray-500/5 last:border-0">
+                        <span class="font-medium">${DOKUMEN_LABEL[jenis]}</span>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span data-role-visible="kepala_tu,kepala_sekolah,kepala_bkk" class="px-2 py-0.5 rounded-full text-[10px] font-medium border ${statusDokumenBadgeClass(d.status)}">${d.status}</span>
+                            <select data-role-visible="operator" onchange="onChangeDokumenStatus('${jenis}', this.value)" class="ui-input text-[10px] px-1.5 py-1 rounded-lg">
+                                ${optionsHtml}
+                            </select>
+                            ${scanLink}
+                        </div>
+                    </div>`;
+            }).join('');
+            applyRoleUI();
+        }
+
+        async function onChangeDokumenStatus(jenis, statusBaru) {
+            if (!currentDetailSiswaId) return;
+            if (!simartaBackendConfigured()) { alert('Backend belum dikonfigurasi.'); return; }
+            try {
+                const res = await callSimartaBackend('updateDokumenSiswa', {
+                    siswa_id: currentDetailSiswaId, jenis: jenis, status: statusBaru
+                });
+                applyDokumenRecordUpdate(res.record);
+            } catch (err) {
+                alert('Gagal menyimpan status dokumen: ' + err.message);
+                openStudentDetail(currentDetailSiswaId); // kembalikan tampilan ke state tersimpan terakhir
+            }
+        }
+
+        function triggerLampirkanScan(jenis) {
+            dokumenJenisAktif = jenis;
+            document.getElementById('dok-scan-file-input').click();
+        }
+
+        async function onDokumenScanFileSelected(event) {
+            const file = event.target.files && event.target.files[0];
+            event.target.value = ''; // reset supaya file yang sama bisa dipilih ulang kalau perlu
+            if (!file || !dokumenJenisAktif || !currentDetailSiswaId) return;
+            if (!simartaBackendConfigured()) { alert('Backend belum dikonfigurasi.'); return; }
+
+            const jenis = dokumenJenisAktif;
+            try {
+                const base64 = await fileToBase64(file);
+                // Melampirkan scan menandakan dokumennya memang ada -> status otomatis ikut "Ada".
+                const res = await callSimartaBackend('updateDokumenSiswa', {
+                    siswa_id: currentDetailSiswaId, jenis: jenis, status: 'Ada',
+                    file: { base64, mimeType: file.type, filename: file.name }
+                });
+                applyDokumenRecordUpdate(res.record);
+            } catch (err) {
+                alert('Gagal mengunggah scan: ' + err.message);
+            } finally {
+                dokumenJenisAktif = null;
+            }
+        }
+
+        async function hapusScanDokumen(jenis) {
+            if (!currentDetailSiswaId) return;
+            if (!confirm('Hapus lampiran scan ini? Status kelengkapan dokumen tidak berubah, hanya file scan-nya yang dihapus.')) return;
+            if (!simartaBackendConfigured()) { alert('Backend belum dikonfigurasi.'); return; }
+            try {
+                const siswa = siswaData.find(s => s.id === currentDetailSiswaId);
+                const statusSaatIni = siswa && siswa.dokumen && siswa.dokumen[jenis] ? siswa.dokumen[jenis].status : 'Belum Ada';
+                const res = await callSimartaBackend('updateDokumenSiswa', {
+                    siswa_id: currentDetailSiswaId, jenis: jenis, status: statusSaatIni, hapus_scan: true
+                });
+                applyDokumenRecordUpdate(res.record);
+            } catch (err) {
+                alert('Gagal menghapus scan: ' + err.message);
+            }
+        }
+
+        // Menyinkronkan record siswa terbaru (hasil updateDokumenSiswa) ke cache siswaData
+        // di browser supaya tabel & modal detail konsisten tanpa reload penuh dari backend.
+        function applyDokumenRecordUpdate(record) {
+            if (!record) return;
+            const idx = siswaData.findIndex(s => s.id === record.id);
+            if (idx !== -1) siswaData[idx] = Object.assign({}, siswaData[idx], record);
+            renderDokumenSiswaBlock(record);
+            renderSiswaTable();
         }
 
         /* ---- Riwayat Kelas & Alumni di dalam modal detail siswa ---- */
@@ -2450,6 +2586,7 @@
             document.getElementById('modal-student-alamat').innerText = siswa ? (siswa.alamat || '-') : '-';
             document.getElementById('modal-student-riwayat').innerHTML = '<span class="opacity-50 text-[11px]">Memuat riwayat...</span>';
             document.getElementById('modal-student-alumni-block').innerText = 'Memuat...';
+            renderDokumenSiswaBlock(siswa);
 
             document.getElementById('modal-student').classList.remove('hidden');
             const closeBtn = document.getElementById('modal-close-btn');
